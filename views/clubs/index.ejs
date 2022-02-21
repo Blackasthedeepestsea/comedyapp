@@ -4,9 +4,25 @@
     <div>
         <a href="/clubs/new">Add Club</a>
     </div>
-    <ul>
+    
         <% for (let club of clubs) { %>
-        <li><a href="/clubs/<%= club._id %>"><%= club.title %></a></li>
+    <div class="card" mb-3>
+        <div class="row">
+            <div class="col-md-4">
+                <img class="img-fluid" alt="" src="<%=club.image%>">
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 class="card-title"><%= club.title %></h5>
+                    <p class="card-text"><%= club.description %></p>
+                    <p class="card-text">
+                        <small class="text-muted"><%= club.location %></small>
+                    </p>
+                    <a href="/clubs/<%=club._id%>"class="btn btn-primary">View <%=club.title%></a>
+                </div>
+            </div>
+        </div>
+    </div>
         <% } %>
-    </ul>
+    
     

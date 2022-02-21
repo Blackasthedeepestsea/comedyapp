@@ -1,19 +1,29 @@
 <% layout('layouts/boilerplate')%>
 
-    <h1><%= club.title %></h1>
-    <h2><%= club.location %></h2>
-    <img src="<%= club.image%> alt="">
-    <p><%= club.description %></p>
+<div class="row">
+    <div class="col-6 offset-3">
+        <div class="card">
+            <img src="<%= club.image %>" class="card-img-top" alt="...">
+            <div class="card-body">
+                <h5 class="card-title"> <%= club.title %> </h5>
+                <p class="card-text"><%= club.description %></p>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item"> <%= club.location %></li>
+                <li class="list-group-item">$<%= club.price %> per show</li>
+               
+            </ul>
+            <div class="card-body">
+             <a class="card-link btn btn-success" href="/clubs/<%=club._id%>/edit">Edit Clubs</a></p>
+             <form action="/clubs/<%=club._id%>?_method=DELETE" method="POST">
+                <button class="btn btn-danger">Delete!</button>
+                    </form>
+            </div>
+        </div>
+    </div>
+</div>
 
-<p>
-    <form action="/clubs/<%=club._id%>?_method=DELETE" method="POST">
-<button>Delete!</button>
-    </form>
-</p>
-    <footer>
-<p>   <a href="/clubs/<%=club._id%>/edit">Edit Clubs</a></p>
 
-        <a href="/clubs">All Clubs</a>
-     
-    </footer>
- 
+
+
+
