@@ -1,32 +1,47 @@
 <% layout('layouts/boilerplate')%>
 <h1 class="text-center">New Club</h1>
 <div class="col-6 offset-3">  
-<form action="/clubs" method="POST">
+<form action="/clubs" method="POST" class="validated-form" novalidate>
         <div class="mb-3">
             <label class="form-label" for="title">Title</label>
-            <input class="form-control" type="text" id="title" name="club[title]">
+            <input class="form-control" type="text" id="title" name="club[title]" required>
+            <div class="valid-feedback">
+                Looks good!
+            </div>
         </div>
         <div class="mb-3">
             <label class="form-label" for="location">Location</label>
-            <input class="form-control" type="text" id="location" name="club[location]">
+            <input class="form-control" type="text" id="location" name="club[location]" required>
+            <div class="valid-feedback">
+                Looks good!
+            </div>
         </div>
         <div class="mb-3">
             <label class="form-label" for="image">Image URL</label>
-            <input class="form-control" type="text" id="location" name="club[image]">
+            <input class="form-control" type="text" id="location" name="club[image]" required>
+            <div class="valid-feedback">
+                Looks good!
+            </div>
         </div>
 
         <div class="mb-3">
             <label class="form-label" for="price">Club Price</label>
             <div class="input-group">
                 <span class="input-group-text" id="price-label">$</span>
-                <input type="text" class="form-control" id="price" placeholder="0.00" aria-label="price" aria-describedby="price-label" name="club[price]">
+                <input type="text" class="form-control" id="price" placeholder="0.00" aria-label="price" aria-describedby="price-label" name="club[price]" required>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
             </div>
 
         </div>
 
         <div class="mb-3">
             <label class="form-label" for="description">Description</label>
-            <textarea class="form-control" type="text" id="description" name="club[description]"></textarea>
+            <textarea class="form-control" type="text" id="description" name="club[description]" required></textarea>
+            <div class="valid-feedback">
+                Looks good!
+            </div>
         </div>
         <div class="mb-3">
         <button class="btn btn-success">Add Club</button>
