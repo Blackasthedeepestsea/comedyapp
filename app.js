@@ -2,13 +2,14 @@ const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
 const ejsMate = require('ejs-mate');
-const {clubSchema} = require('./schemas.js');
+const {clubSchema, reviewSchema } = require('./schemas.js');
 const catchAsync = require('./utils/catchAsync');
 const ExpressError = require('./utils/ExpressError');
 const methodOverride = require('method-override');
 const Club = require('./models/club');
 const res = require('express/lib/response');
 const { nextTick } = require('process');
+const Review = require('./models/review');
 
 mongoose.connect('mongodb://localhost:27017/comedy-app');
 
@@ -30,6 +31,16 @@ app.engine('ejs', ejsMate);
 
 const validateClub = (req, res, next) => {
     const {error} = clubSchema.validate(req.body);
+    if(error){
+        const msg = error.details.map(el => el.message).join(',')
+        throw new ExpressError(msg, 400)
+    } else {
+        next();
+    }
+}
+
+const validateReview = (req, res, next) => {
+    const { error } = reviewSchema.validate(req.body);
     if(error){
         const msg = error.details.map(el => el.message).join(',')
         throw new ExpressError(msg, 400)
@@ -60,8 +71,9 @@ app.post('/clubs', validateClub, catchAsync(async (req, res, next) => {
 }))
 
 app.get('/clubs/:id', catchAsync(async (req, res) => {
-  const club = await Club.findById(req.params.id)
-    res.render('clubs/show', { club });
+  const club = await Club.findById(req.params.id).populate('reviews');
+
+  res.render('clubs/show', { club });
 }));
 
 app.get('/clubs/:id/edit', catchAsync(async(req,res) => {
@@ -80,6 +92,22 @@ app.delete('/clubs/:id', catchAsync(async (req,res) => {
     await Club.findByIdAndDelete(id);
     res.redirect('/clubs/');
 }))
+
+app.post('/clubs/:id/reviews', validateReview, catchAsync(async (req, res) => {
+    const club = await Club.findById(req.params.id);
+    const review = new Review(req.body.review);
+    club.reviews.push(review);
+   await review.save();
+   await club.save();
+   res.redirect(`/clubs/${club._id}`);
+}))
+
+app.delete('/clubs/:id/reviews/:reviewId', catchAsync(async (req, res) => {
+    const { id, reviewId } = req.params;
+    await Club.findByIdAndUpdate(id, { $pull: { reviews: reviewId }});
+    await Review.findByIdAndDelete(reviewId);
+    res.redirect(`/clubs/${id}`);
+}));
 
 app.all('*', (req, res, next) => {
     next(new ExpressError('Page Not Found', 404))
