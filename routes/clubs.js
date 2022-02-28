@@ -36,7 +36,10 @@ router.post('/', validateClub, catchAsync(async (req, res, next) => {
 
 router.get('/:id', catchAsync(async (req, res) => {
   const club = await Club.findById(req.params.id).populate('reviews');
-
+if(!club) {
+    req.flash('error', 'cant find that club');
+    return res.redirect('/clubs');
+}
   res.render('clubs/show', { club });
 }));
 
@@ -48,12 +51,14 @@ router.get('/:id/edit', catchAsync(async(req,res) => {
 router.put('/:id', validateClub, catchAsync(async (req,res) => {
     const { id } = req.params;
     const club = await Club.findByIdAndUpdate(id,{...req.body.club});
+    req.flash('success', 'successfully updated club');
     res.redirect(`/clubs/${club._id}`)
 }))
 
 router.delete('/:id', catchAsync(async (req,res) => {
     const { id } = req.params;
     await Club.findByIdAndDelete(id);
+    req.flash('success', 'successfully deleted club!');
     res.redirect('/clubs/');
 }))
 
