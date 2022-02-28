@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const catchAsync = require('../utils/catchAsync');
 const {clubSchema } = require('../schemas.js');
+const {isLoggedIn} = require('../middleware');
+
 const ExpressError = require('../utils/ExpressError');
 const Club = require('../models/club');
 
@@ -21,11 +23,12 @@ router.get('/', catchAsync(async (req, res) => {
     res.render('clubs/index', { clubs })
 }));
 
-router.get('/new', catchAsync(async (req, res) => {
+router.get('/new', isLoggedIn, (req, res) => {
+  
     res.render('clubs/new');
-}))
+});
 
-router.post('/', validateClub, catchAsync(async (req, res, next) => {
+router.post('/', isLoggedIn, validateClub, catchAsync(async (req, res, next) => {
    //if(!req.body.campground) throw new ExpressError('invalid club data', 400);
 
    const club = new Club(req.body.club);
@@ -43,19 +46,19 @@ if(!club) {
   res.render('clubs/show', { club });
 }));
 
-router.get('/:id/edit', catchAsync(async(req,res) => {
+router.get('/:id/edit', isLoggedIn, catchAsync(async(req,res) => {
     const club = await Club.findById(req.params.id)
     res.render('clubs/edit', { club });
 }));
 
-router.put('/:id', validateClub, catchAsync(async (req,res) => {
+router.put('/:id', isLoggedIn, validateClub, catchAsync(async (req,res) => {
     const { id } = req.params;
     const club = await Club.findByIdAndUpdate(id,{...req.body.club});
     req.flash('success', 'successfully updated club');
     res.redirect(`/clubs/${club._id}`)
 }))
 
-router.delete('/:id', catchAsync(async (req,res) => {
+router.delete('/:id', isLoggedIn, catchAsync(async (req,res) => {
     const { id } = req.params;
     await Club.findByIdAndDelete(id);
     req.flash('success', 'successfully deleted club!');
