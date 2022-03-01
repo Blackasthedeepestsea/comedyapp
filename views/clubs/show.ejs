@@ -10,15 +10,18 @@
             </div>
             <ul class="list-group list-group-flush">
                 <li class="list-group-item"> <%= club.location %></li>
+                <li class="list-group-item"> <%= club.author.username %></li>
                 <li class="list-group-item">$<%= club.price %> per show</li>
                
             </ul>
+            <%  if( currentUser && club.author.equals(currentUser._id))  {%>
             <div class="card-body">
-             <a class="card-link btn btn-success" href="/clubs/<%=club._id%>/edit">Edit Clubs</a></p>
-             <form action="/clubs/<%=club._id%>?_method=DELETE" method="POST">
+             <a class="card-link btn btn-info" href="/clubs/<%=club._id%>/edit">Edit Clubs</a>
+             <form class="d-inline" action="/clubs/<%=club._id%>?_method=DELETE" method="POST">
                 <button class="btn btn-danger">Delete!</button>
                     </form>
             </div>
+            <% } %>
             <div class="card-footer text-muted">2 days ago</div>
         </div>
        
@@ -48,7 +51,7 @@
       <div class="card-body">
       <p>Rating : <%= review.rating %></p>
       <p>Review : <%= review.body %></p>
-      <form action="/clubs/<%=club._id%>/reviews/<%=review._id%>?_method=DELETE" method="POST">
+      <form action="/clubs/<%=club._id%>/reviews/<%=review._id%>?_method=DELETE">
         <button class="btn btn-sm btn-danger">Delete</button>
     </form>
     </div>

@@ -31,14 +31,15 @@ router.get('/new', isLoggedIn, (req, res) => {
 router.post('/', isLoggedIn, validateClub, catchAsync(async (req, res, next) => {
    //if(!req.body.campground) throw new ExpressError('invalid club data', 400);
 
-   const club = new Club(req.body.club);
+   const club = new Club(req.body.club); 
+   club.author = req.user._id;
     await club.save();
     req.flash('success', 'successfully made a new club');
     res.redirect(`/clubs/${club._id}`) 
 }))
 
 router.get('/:id', catchAsync(async (req, res) => {
-  const club = await Club.findById(req.params.id).populate('reviews');
+  const club = await Club.findById(req.params.id).populate('reviews').populate('author');
 if(!club) {
     req.flash('error', 'cant find that club');
     return res.redirect('/clubs');
