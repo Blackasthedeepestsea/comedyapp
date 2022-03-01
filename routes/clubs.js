@@ -1,69 +1,23 @@
 const express = require('express');
 const router = express.Router();
+const clubs = require('../controllers/clubs');
 const catchAsync = require('../utils/catchAsync');
-const {clubSchema } = require('../schemas.js');
-const {isLoggedIn} = require('../middleware');
-
-const ExpressError = require('../utils/ExpressError');
+const {isLoggedIn, isAuthor, validateClub} = require('../middleware');
 const Club = require('../models/club');
 
-const validateClub = (req, res, next) => {
-    const {error} = clubSchema.validate(req.body);
-    if(error){
-        const msg = error.details.map(el => el.message).join(',')
-        throw new ExpressError(msg, 400)
-    } else {
-        next();
-    }
-}
 
+router.route('/')
+    .get(catchAsync(clubs.index))
+    .post(isLoggedIn, validateClub, catchAsync(clubs.createClub))
 
-router.get('/', catchAsync(async (req, res) => {
-    const clubs = await Club.find({});
-    res.render('clubs/index', { clubs })
-}));
+router.get('/new', isLoggedIn, clubs.renderNewForm);
 
-router.get('/new', isLoggedIn, (req, res) => {
-  
-    res.render('clubs/new');
-});
+router.route('/:id')
+    .get(catchAsync(clubs.showClub))
+    .put(isLoggedIn, isAuthor, validateClub, catchAsync(clubs.updateClub))
+    .delete(isLoggedIn, isAuthor, catchAsync(clubs.deleteClub))
 
-router.post('/', isLoggedIn, validateClub, catchAsync(async (req, res, next) => {
-   //if(!req.body.campground) throw new ExpressError('invalid club data', 400);
+router.get('/:id/edit', isLoggedIn, isAuthor, catchAsync(clubs.renderEdit));
 
-   const club = new Club(req.body.club); 
-   club.author = req.user._id;
-    await club.save();
-    req.flash('success', 'successfully made a new club');
-    res.redirect(`/clubs/${club._id}`) 
-}))
-
-router.get('/:id', catchAsync(async (req, res) => {
-  const club = await Club.findById(req.params.id).populate('reviews').populate('author');
-if(!club) {
-    req.flash('error', 'cant find that club');
-    return res.redirect('/clubs');
-}
-  res.render('clubs/show', { club });
-}));
-
-router.get('/:id/edit', isLoggedIn, catchAsync(async(req,res) => {
-    const club = await Club.findById(req.params.id)
-    res.render('clubs/edit', { club });
-}));
-
-router.put('/:id', isLoggedIn, validateClub, catchAsync(async (req,res) => {
-    const { id } = req.params;
-    const club = await Club.findByIdAndUpdate(id,{...req.body.club});
-    req.flash('success', 'successfully updated club');
-    res.redirect(`/clubs/${club._id}`)
-}))
-
-router.delete('/:id', isLoggedIn, catchAsync(async (req,res) => {
-    const { id } = req.params;
-    await Club.findByIdAndDelete(id);
-    req.flash('success', 'successfully deleted club!');
-    res.redirect('/clubs/');
-}))
 
 module.exports = router;

@@ -22,13 +22,13 @@
                     </form>
             </div>
             <% } %>
-            <div class="card-footer text-muted">2 days ago</div>
+            <div class="card-footer text-muted">
+                2 days ago
+            </div>
         </div>
-       
-   
-    </div>
+        </div>
 <div class="col-6">
-
+<% if(currentUser) { %> 
     <h2>Leave a Review</h2>
     <form action="/clubs/<%=club._id%>/reviews" method="POST" class="mb-3 validated-form" novalidate>
       <div class="mb-3">
@@ -46,14 +46,19 @@
      
         <button class="btn btn-success">Submit</button>
     </form>
+    <% } %>
     <% for(let review of club.reviews) { %>
   <div class="mb-3 card">
       <div class="card-body">
-      <p>Rating : <%= review.rating %></p>
+      <h5 class="card-title">Rating : <%= review.rating %></h5>
+     <h6 class="card-subtitle mb-2 text-muted">By <%= review.author.username%></h6>
       <p>Review : <%= review.body %></p>
-      <form action="/clubs/<%=club._id%>/reviews/<%=review._id%>?_method=DELETE">
+    
+      <%  if( currentUser && review.author.equals(currentUser._id))  {%>
+      <form action="/clubs/<%=club._id%>/reviews/<%=review._id%>?_method=DELETE" method="POST">
         <button class="btn btn-sm btn-danger">Delete</button>
     </form>
+    <% } %>
     </div>
   </div>
   <%  }  %>

@@ -28,6 +28,5 @@ ClubSchema.post('findOneAndDelete', async function (doc) {
             }
         })
     }
-} )
-
+})
 module.exports = mongoose.model('Club', ClubSchema);
