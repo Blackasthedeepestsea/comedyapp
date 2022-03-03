@@ -23,7 +23,20 @@ const seedDB = async () => {
            author: '621d4d861ceb14325669b2db',
             location: `${cities[random1000].city}, ${cities[random1000].state}`,
             title: `${sample(descriptors)} ${sample(places)}`,
-            image: 'https://source.unsplash.com/collection/3291759',
+            images:  [
+                {
+                  url: 'https://res.cloudinary.com/dy7nkdujd/image/upload/v1646191651/ComedyApp/xby21oqes0bwx3sctj9a.jpg',
+                  filename: 'ComedyApp/xby21oqes0bwx3sctj9a'
+                },
+                {
+                  url: 'https://res.cloudinary.com/dy7nkdujd/image/upload/v1646191651/ComedyApp/bqa0eac8v9daczhqy4d2.jpg',
+                  filename: 'ComedyApp/bqa0eac8v9daczhqy4d2'
+                },
+                {
+                  url: 'https://res.cloudinary.com/dy7nkdujd/image/upload/v1646191651/ComedyApp/tiadznuwqkhxuqmqisxi.jpg',
+                  filename: 'ComedyApp/tiadznuwqkhxuqmqisxi'
+                }
+              ],
             description: "lorem ipsume blah blah",
             price
         

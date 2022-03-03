@@ -1,4 +1,5 @@
 const Club = require('../models/club');
+const { cloudinary } = require("../cloudinary");
 
 module.exports.index = async (req, res) => {
     const clubs = await Club.find({});
@@ -11,10 +12,11 @@ module.exports.renderNewForm = (req, res) => {
 
 module.exports.createClub = async (req, res, next) => {
     //if(!req.body.campground) throw new ExpressError('invalid club data', 400);
- 
     const club = new Club(req.body.club); 
+    club.images = req.files.map(f => ({url: f.path, filename: f.filename}));
       club.author = req.user._id;
      await club.save();
+     console.log(club);
      req.flash('success', 'successfully made a new club');
      res.redirect(`/clubs/${club._id}`) 
  }
@@ -47,9 +49,18 @@ module.exports.createClub = async (req, res, next) => {
 
 module.exports.updateClub = async (req,res) => {
     const { id } = req.params;
-   
-   const club = await Club.findByIdAndUpdate(id,{...req.body.club});
-    req.flash('success', 'successfully updated club');
+    console.log(req.body);
+    const club = await Club.findByIdAndUpdate(id, { ...req.body.club });
+    const imgs = req.files.map(f => ({ url: f.path, filename: f.filename }));
+    club.images.push(...imgs);
+    await club.save();
+    if (req.body.deleteImages) {
+        for (let filename of req.body.deleteImages) {
+            await cloudinary.uploader.destroy(filename);
+        }
+        await club.updateOne({ $pull: { images: { filename: { $in: req.body.deleteImages } } } })
+    }
+    req.flash('success', 'Successfully updated club!');
     res.redirect(`/clubs/${club._id}`)
 }
 
