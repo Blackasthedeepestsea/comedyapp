@@ -47,6 +47,8 @@
         </div>
         </div>
 <div class="col-6">
+  <div id='map' style='width: 100%; height: 300px;'></div>
+
 <% if(currentUser) { %> 
     <h2>Leave a Review</h2>
     <form action="/clubs/<%=club._id%>/reviews" method="POST" class="mb-3 validated-form" novalidate>
@@ -101,6 +103,12 @@
 
 </div>
 
+<script>
+  const mapToken = '<%-process.env.MAPBOX_TOKEN%>';
+  const club = <%- JSON.stringify(club) %>
+</script>
+
+<script src="/javascripts/showPageMap.js"></script>
 
 
 

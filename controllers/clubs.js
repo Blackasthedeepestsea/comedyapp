@@ -1,4 +1,7 @@
 const Club = require('../models/club');
+const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding");
+const mapBoxToken = process.env.MAPBOX_TOKEN;
+const geocoder = mbxGeocoding({ accessToken: mapBoxToken });
 const { cloudinary } = require("../cloudinary");
 
 module.exports.index = async (req, res) => {
@@ -11,10 +14,14 @@ module.exports.renderNewForm = (req, res) => {
 }
 
 module.exports.createClub = async (req, res, next) => {
-    //if(!req.body.campground) throw new ExpressError('invalid club data', 400);
+    const geoData = await geocoder.forwardGeocode({
+        query: req.body.club.location,
+        limit: 1
+    }).send()
     const club = new Club(req.body.club); 
+    club.geometry = geoData.body.features[0].geometry;
     club.images = req.files.map(f => ({url: f.path, filename: f.filename}));
-      club.author = req.user._id;
+    club.author = req.user._id;
      await club.save();
      console.log(club);
      req.flash('success', 'successfully made a new club');
