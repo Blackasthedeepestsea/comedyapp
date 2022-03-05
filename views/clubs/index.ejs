@@ -1,9 +1,11 @@
 <% layout('layouts/boilerplate')%>
-    <div id ="cluster-map"></div>
-    <h1>All Clubs</h1>
-    <div>
-        <a href="/clubs/new">Add Club</a>
+    <div class="mb-3" id ="cluster-map"></div>
+    <div class="text-center fw-bold">
+        <a class="btn btn-primary mb-3" href="/clubs/new">Add Club</a>
     </div>
+
+  <div class="text-center">  <h1>All Clubs</h1> </div> 
+    
     
         <% for (let club of clubs) { %>
     <div class="card mb-3">

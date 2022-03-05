@@ -25,10 +25,6 @@ const seedDB = async () => {
             title: `${sample(descriptors)} ${sample(places)}`,
             images:  [
                 {
-                  url: 'https://res.cloudinary.com/dy7nkdujd/image/upload/v1646191651/ComedyApp/xby21oqes0bwx3sctj9a.jpg',
-                  filename: 'ComedyApp/xby21oqes0bwx3sctj9a'
-                },
-                {
                   url: 'https://res.cloudinary.com/dy7nkdujd/image/upload/v1646191651/ComedyApp/bqa0eac8v9daczhqy4d2.jpg',
                   filename: 'ComedyApp/bqa0eac8v9daczhqy4d2'
                 },
@@ -37,7 +33,7 @@ const seedDB = async () => {
                   filename: 'ComedyApp/tiadznuwqkhxuqmqisxi'
                 }
               ],
-            description: "lorem ipsume blah blah",
+            description: "A comedy club is a venue—typically a nightclub, bar, hotel, casino, or restaurant—where people watch or listen to performances, including stand-up comedians, improvisational comedians, impersonators, impressionists, magicians, ventriloquists, and other comedy acts. The term comedy club usually refers to venues that feature stand-up comedy, as distinguished from improvisational theatres, which host improv or sketch comedy, and variety clubs (which may also host musical acts). ",
             price,
             geometry: {
               type: "Point",
